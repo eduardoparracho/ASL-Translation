@@ -28,8 +28,8 @@ MANIFEST
 clips/
 msasl_dataset/
 models/*
-aplhabet/dataset/*
-aplhabet/keypoints/*
+alphabet/dataset/*
+alphabet/keypoints/*
 output_keypoints/*
 .vscode/
 
