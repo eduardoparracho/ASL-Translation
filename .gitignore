@@ -27,6 +27,10 @@ share/python-wheels/
 MANIFEST
 clips/
 msasl_dataset/
+models/*
+aplhabet/dataset/*
+aplhabet/keypoints/*
+output_keypoints/*
 .vscode/
 
 # PyInstaller
