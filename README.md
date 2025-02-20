@@ -60,4 +60,5 @@ You have to save your model to /models/(your-model-name)/(your-model)
 Feel free to open issues or submit PRs to improve this project!
 
 Made with ❤️ for ASL accessibility! 🚀
+Eduardo Parracho - Ironhack AD 2025
 
