@@ -3,7 +3,7 @@ import os
 import tensorflow as tf
 import pandas as pd
 import plotly.express as px
-
+from tensorflow.keras.utils import plot_model
 # Page Title
 st.title("ASL Model Performance Dashboard")
 st.write("📊 A dashboard to showcase model performance statistics 📊 ")
@@ -14,12 +14,19 @@ MODEL_FOLDER = "models"
 model_files = [f for f in os.listdir(MODEL_FOLDER)]
 
 # Streamlit dropdown to select a model
-selected_model = st.selectbox("Select a Model:", model_files)
+selected_model = st.selectbox("Select a Model:", model_files, index=None)
 
 # Load the selected model when user selects
 if selected_model:
     model_path = os.path.join(MODEL_FOLDER, selected_model + "/" + selected_model + ".h5")
     model = tf.keras.models.load_model(model_path)
+
+    st.subheader("Model Architecture")
+    image_path = "model_structure.png"
+    if not os.path.exists(image_path):
+        plot_model(model, to_file=image_path, show_shapes=True, show_layer_names=True)
+
+    st.image("model_structure.png", caption="Neural Network Architecture")
     
     if not model:
         st.error("Model could not be loaded")
@@ -49,7 +56,7 @@ if selected_model:
         fig.update_yaxes(range=[history["accuracy"].min() - 0.01, history["accuracy"].max() + 0.01])
 
         # Show Plot in Streamlit
-        st.plotly_chart(fig)
+        st.plotly_chart(fig, use_container_width=True)
 
         st.header("Performance Metrics")
         st.subheader("🔍 Raw Data")
@@ -78,16 +85,24 @@ if selected_model:
             yaxis=dict(title="Accuracy (%)"),
             coloraxis_colorbar=dict(title="Accuracy")
         )
-
+       
         # Show Chart
         st.plotly_chart(fig)
         
 
         st.header("Results Matrix")
         
-    
+        pc_matrix = matrix.copy()
+        
+        for col in pc_matrix.columns:
+            total = pc_matrix[col].sum()
+            for index in pc_matrix.index:
+                pc_matrix.at[index, col] = pc_matrix.at[index, col] / total
+
+        #st.table(pc_matrix)
+
         fig = px.imshow(
-            matrix,
+            pc_matrix,
             color_continuous_scale='Viridis',  # You can change the color scale
             title="Heatmap",
             labels=dict(x="Ground Truth", y="Model Guesses", color="Intensity")
